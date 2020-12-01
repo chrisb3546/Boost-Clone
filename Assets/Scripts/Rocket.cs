@@ -26,6 +26,21 @@ public class Rocket : MonoBehaviour
 
     }
 
+        void OnCollisionEnter(Collision collision)
+        {
+            switch (collision.gameObject.tag)
+            {
+                case "Friendly":
+                break;
+                case "fuel":
+                print("fuel");
+                break;
+                default:
+                print("die");
+                break;
+                
+            }
+        }
     void Thrust()
     {
         float thrustThisFrame = mainThrust * Time.deltaTime;
