@@ -21,6 +21,7 @@ public class Rocket : MonoBehaviour
     enum State { Alive, Dying, Transcending };
     State state = State.Alive;
     [SerializeField] bool collisionsEnabled = true;
+     int currentSceneIndex;
 
     
 
@@ -30,7 +31,7 @@ public class Rocket : MonoBehaviour
         rigidBody= GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
        
-        
+         
     }
 
     // Update is called once per frame
@@ -41,11 +42,15 @@ public class Rocket : MonoBehaviour
             Thrust();
             Rotate();
         }
+        
         if (Debug.isDebugBuild)
         {
             DevTool();
-            print("debug");
+            
         }
+        
+        print(currentSceneIndex);
+        
         
         
         
@@ -79,7 +84,16 @@ public class Rocket : MonoBehaviour
 
     private void LoadNextScene()
     {
-        SceneManager.LoadScene(1);
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0; 
+        }
+        SceneManager.LoadScene(nextSceneIndex);
+        
+        
+       
     }
 
     private void LoadFirstScene()
