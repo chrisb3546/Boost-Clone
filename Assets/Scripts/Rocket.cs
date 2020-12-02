@@ -14,11 +14,13 @@ public class Rocket : MonoBehaviour
     [SerializeField] ParticleSystem mainEngineEffect;
     [SerializeField] ParticleSystem deathExplosionEffect;
     [SerializeField] ParticleSystem victoryEffect;
+    [SerializeField] float levelLoadDelay = 1f;
     Rigidbody rigidBody;
     AudioSource audioSource ;
 
     enum State { Alive, Dying, Transcending };
     State state = State.Alive;
+    [SerializeField] bool collisionsEnabled = true;
 
     
 
@@ -39,6 +41,12 @@ public class Rocket : MonoBehaviour
             Thrust();
             Rotate();
         }
+        if (Debug.isDebugBuild)
+        {
+            DevTool();
+            print("debug");
+        }
+        
         
         
 
@@ -46,7 +54,7 @@ public class Rocket : MonoBehaviour
 
         void OnCollisionEnter(Collision collision)
         {
-            if(state != State.Alive) {return;}
+            if(state != State.Alive || !collisionsEnabled ) {return;}
             switch (collision.gameObject.tag)
             {
                 case "Friendly":
@@ -56,14 +64,14 @@ public class Rocket : MonoBehaviour
                 audioSource.Stop();
                 victoryEffect.Play();
                 audioSource.PlayOneShot(victoryChime);
-                Invoke("LoadNextScene", 1f);
+                Invoke("LoadNextScene", levelLoadDelay);
                 break;
                 default:
                 state = State.Dying;
                 audioSource.Stop();
                 audioSource.PlayOneShot(deathExplosion);
                 deathExplosionEffect.Play();
-                Invoke("LoadFirstScene", 1f);
+                Invoke("LoadFirstScene", levelLoadDelay);
                 break;
                 
             }
@@ -118,6 +126,22 @@ public class Rocket : MonoBehaviour
         }
 
         rigidBody.freezeRotation = false;
+    }
+
+    private void DevTool()
+    {
+        if(Input.GetKey(KeyCode.L))
+        {
+            LoadNextScene();
+        }
+        else if( Input.GetKey(KeyCode.C))
+        {
+            collisionsEnabled = !collisionsEnabled ;
+            
+            
+           
+        }
+       
     }
 
 
