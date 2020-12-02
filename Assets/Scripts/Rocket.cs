@@ -82,6 +82,12 @@ public class Rocket : MonoBehaviour
             }
         }
 
+    private void GameOverScene()
+    {   
+        print("in game over");
+        // SceneManager.LoadScene(0);
+        // Invoke("LoadFirstScene", levelLoadDelay);
+    }
     private void LoadNextScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
