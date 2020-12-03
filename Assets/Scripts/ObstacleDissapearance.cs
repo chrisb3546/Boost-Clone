@@ -25,6 +25,7 @@ public class ObstacleDissapearance : MonoBehaviour
     IEnumerator InAndOut()
     {
         theObstacle.SetActive(false);
+        
         yield return new WaitForSeconds(2.0f);
         theObstacle.SetActive(true);
         yield return new WaitForSeconds(2.0f);
