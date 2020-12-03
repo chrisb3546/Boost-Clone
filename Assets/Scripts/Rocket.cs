@@ -18,8 +18,9 @@ public class Rocket : MonoBehaviour
     Rigidbody rigidBody;
     AudioSource audioSource ;
 
-    enum State { Alive, Dying, Transcending };
-    State state = State.Alive;
+    // enum State { Alive, Dying, Transcending };
+    // State state = State.Alive;
+    bool alive = true;
     [SerializeField] bool collisionsEnabled = true;
      int currentSceneIndex;
 
@@ -37,7 +38,7 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(state == State.Alive)
+        if(alive)
         {
             Thrust();
             Rotate();
@@ -59,20 +60,20 @@ public class Rocket : MonoBehaviour
 
         void OnCollisionEnter(Collision collision)
         {
-            if(state != State.Alive || !collisionsEnabled ) {return;}
+            if(!alive || !collisionsEnabled ) {return;}
             switch (collision.gameObject.tag)
             {
                 case "Friendly":
                 break;
                 case "Finish":
-                state = State.Transcending;
+                print("here");
                 audioSource.Stop();
                 victoryEffect.Play();
                 audioSource.PlayOneShot(victoryChime);
                 Invoke("LoadNextScene", levelLoadDelay);
                 break;
                 default:
-                state = State.Dying;
+                alive = false;
                 audioSource.Stop();
                 audioSource.PlayOneShot(deathExplosion);
                 deathExplosionEffect.Play();
@@ -82,12 +83,7 @@ public class Rocket : MonoBehaviour
             }
         }
 
-    private void GameOverScene()
-    {   
-        print("in game over");
-        // SceneManager.LoadScene(0);
-        // Invoke("LoadFirstScene", levelLoadDelay);
-    }
+  
     private void LoadNextScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
